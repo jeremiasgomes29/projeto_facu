@@ -1,0 +1,25 @@
+
+@page "/login"
+@inject AppDbContext db
+@inject NavigationManager nav
+
+<h3>Login</h3>
+
+<input @bind="email" placeholder="Email" />
+<input @bind="senha" type="password" />
+<button @onclick="Entrar">Entrar</button>
+
+<p>@msg</p>
+
+@code {
+    string email;
+    string senha;
+    string msg;
+
+    void Entrar()
+    {
+        var u = db.Usuarios.FirstOrDefault(x => x.Email == email && x.Senha == senha);
+        if (u != null) nav.NavigateTo("/dashboard");
+        else msg = "Erro login";
+    }
+}

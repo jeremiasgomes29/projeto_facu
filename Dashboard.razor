@@ -1,0 +1,42 @@
+
+@page "/dashboard"
+@inject AppDbContext db
+
+<h3>Dashboard</h3>
+
+<h4>Saldo: @saldo</h4>
+
+<input @bind="desc" placeholder="Descrição" />
+<input @bind="valor" type="number" />
+<select @bind="tipo">
+<option>Receita</option>
+<option>Despesa</option>
+</select>
+
+<button @onclick="Add">Adicionar</button>
+
+@foreach (var t in lista)
+{
+<p>@t.Tipo - @t.Descricao - @t.Valor</p>
+}
+
+@code {
+    List<Transacao> lista = new();
+    string desc;
+    decimal valor;
+    string tipo="Receita";
+    decimal saldo;
+
+    protected override void OnInitialized(){Load();}
+
+    void Load(){
+        lista = db.Transacoes.ToList();
+        saldo = lista.Sum(x=> x.Tipo=="Receita"?x.Valor:-x.Valor);
+    }
+
+    void Add(){
+        db.Transacoes.Add(new Transacao{Descricao=desc,Valor=valor,Tipo=tipo});
+        db.SaveChanges();
+        Load();
+    }
+}

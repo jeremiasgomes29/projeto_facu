@@ -1,0 +1,22 @@
+
+@page "/register"
+@inject AppDbContext db
+@inject NavigationManager nav
+
+<h3>Cadastro</h3>
+
+<input @bind="email" placeholder="Email" />
+<input @bind="senha" type="password" />
+<button @onclick="Cadastrar">Cadastrar</button>
+
+@code {
+    string email;
+    string senha;
+
+    void Cadastrar()
+    {
+        db.Usuarios.Add(new Usuario { Email = email, Senha = senha });
+        db.SaveChanges();
+        nav.NavigateTo("/login");
+    }
+}
